@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/allen/Desktop/Antigravity/backend/mlruns/0/3c02ad4f011246d98e60d1b88d2e2cf4/artifacts
+end_time: 1775131196542
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3c02ad4f011246d98e60d1b88d2e2cf4
+run_name: train_script
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775131092891
+status: 3
+tags: []
+user_id: allen

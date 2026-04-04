@@ -1,0 +1,7 @@
+training:
+  param_grid:
+    - forest_reg__n_estimators: [3, 10, 30]
+      forest_reg__max_features: [2, 4, 6, 8]
+    - forest_reg__bootstrap: [False]
+      forest_reg__n_estimators: [3, 10]
+      forest_reg__max_features: [2, 3, 4]

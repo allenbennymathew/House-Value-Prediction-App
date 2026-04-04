@@ -1,0 +1,87 @@
+stages:
+  - lint
+  - test
+  - build
+  - install
+  - docs
+
+variables:
+  CONDA_ENV: "mle-env"
+
+linting_job:
+  stage: lint
+  script:
+    - conda env create -f env.yml -n $CONDA_ENV || conda env update -f env.yml -n $CONDA_ENV
+    - source activate $CONDA_ENV
+    - flake8 src scripts tests
+
+test_job:
+  stage: test
+  script:
+    - conda env create -f env.yml -n $CONDA_ENV || conda env update -f env.yml -n $CONDA_ENV
+    - source activate $CONDA_ENV
+    - apt-get update && apt-get install -y tree
+    - tree .
+    - pip install -e .
+    - pytest tests/
+
+build_job:
+  stage: build
+  script:
+    - conda env create -f env.yml -n $CONDA_ENV || conda env update -f env.yml -n $CONDA_ENV
+    - source activate $CONDA_ENV
+    - apt-get update && apt-get install -y tree
+    - tree .
+    - python setup.py sdist bdist_wheel
+    - tree .
+  artifacts:
+    paths:
+      - dist/
+      - env.yml
+
+install_job:
+  stage: install
+  script:
+    - conda env create -f env.yml -n $CONDA_ENV || conda env update -f env.yml -n $CONDA_ENV
+    - source activate $CONDA_ENV
+    - pip install dist/*.whl
+    - python scripts/ingest_data.py -h
+    - python scripts/train.py -h
+    - python scripts/score.py -h
+
+docs_build_job:
+  stage: docs
+  script:
+    - conda env create -f env.yml -n $CONDA_ENV || conda env update -f env.yml -n $CONDA_ENV
+    - source activate $CONDA_ENV
+    - apt-get update && apt-get install -y tree
+    - tree .
+    - pip install dist/*.whl
+    - cd docs
+    - make html
+    - cd ..
+    - tree .
+  artifacts:
+    paths:
+      - docs/build/html/
+
+build_docker_job:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t my_docker_hub_user/fastapi-model:latest -f deploy/docker/modelserver.Dockerfile .
+
+run_docker_job:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker run -d -p 8000:8000 --name model_container my_docker_hub_user/fastapi-model:latest
+    - sleep 10
+    - curl -X POST -H "Content-Type: application/json" -d '{"longitude":-122.23,"latitude":37.88,"housing_median_age":41.0,"total_rooms":880.0,"total_bedrooms":129.0,"population":322.0,"households":126.0,"median_income":8.3252,"ocean_proximity":"NEAR BAY"}' http://model_container:8000/predict/random_forest > curl_output.html
+  artifacts:
+    paths:
+      - curl_output.html

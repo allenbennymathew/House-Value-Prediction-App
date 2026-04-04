@@ -1,0 +1,12 @@
+README.md
+setup.py
+src/housing/__init__.py
+src/housing/ingest.py
+src/housing/logger.py
+src/housing/score.py
+src/housing/train.py
+src/housing.egg-info/PKG-INFO
+src/housing.egg-info/SOURCES.txt
+src/housing.egg-info/dependency_links.txt
+src/housing.egg-info/requires.txt
+src/housing.egg-info/top_level.txt
