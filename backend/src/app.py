@@ -66,13 +66,19 @@ class RecordResponse(BaseModel):
     class Config:
         orm_mode = True
 
+# Global cache for loaded models
+MODELS_CACHE = {}
+
 def get_prediction(data_dict, model_name="random_forest"):
-    model_path = f"artifacts/{model_name}.pkl"
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model pickle not found in {model_path}")
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)
+    global MODELS_CACHE
+    if model_name not in MODELS_CACHE:
+        model_path = f"artifacts/{model_name}.pkl"
+        if not os.path.exists(model_path):
+            raise FileNotFoundError(f"Model pickle not found in {model_path}")
+        with open(model_path, "rb") as f:
+            MODELS_CACHE[model_name] = pickle.load(f)
         
+    model = MODELS_CACHE[model_name]
     df = pd.DataFrame([data_dict])
     pred = model.predict(df)
     return pred[0]
