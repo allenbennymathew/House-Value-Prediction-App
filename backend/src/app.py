@@ -90,7 +90,9 @@ def predict(model_name: str, input_data: InputData, db: Session = Depends(get_db
     try:
         prediction = float(get_prediction(data_dict, model_name))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import sklearn
+        err_msg = f"VALUATION FAILURE: {str(e)} (Engine: scikit-learn {sklearn.__version__})"
+        raise HTTPException(status_code=500, detail=err_msg)
         
     record = InferenceRecord(
         model_name=model_name,
@@ -106,6 +108,19 @@ def predict(model_name: str, input_data: InputData, db: Session = Depends(get_db
 def get_inferences(model_name: str, db: Session = Depends(get_db)):
     records = db.query(InferenceRecord).filter(InferenceRecord.model_name == model_name).all()
     return records
+
+@app.get("/status")
+def get_status():
+    import sklearn
+    import pandas
+    import numpy
+    return {
+        "status": "established",
+        "sklearn": sklearn.__version__,
+        "pandas": pandas.__version__,
+        "numpy": numpy.__version__,
+        "python": sys.version
+    }
 
 @app.get("/metrics")
 def get_metrics():
