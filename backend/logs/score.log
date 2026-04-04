@@ -12,3 +12,12 @@
 2026-04-03 12:18:59,071 - housing.score - INFO - Scoring model...
 2026-04-03 12:18:59,136 - housing.score - INFO - Test RMSE: 47951.6477131037
 2026-04-03 12:18:59,145 - score - INFO - Metrics saved to artifacts\metrics.txt
+2026-04-04 18:07:41,649 - git.cmd - DEBUG - Popen(['git', 'version'], cwd=C:\Users\allen\Desktop\Antigravity\backend, stdin=None, shell=False, universal_newlines=False)
+2026-04-04 18:07:41,767 - git.cmd - DEBUG - Popen(['git', 'version'], cwd=C:\Users\allen\Desktop\Antigravity\backend, stdin=None, shell=False, universal_newlines=False)
+2026-04-04 18:07:41,981 - git.util - DEBUG - sys.platform='win32', git_executable='git'
+2026-04-04 18:07:41,986 - git.cmd - DEBUG - Popen(['git', 'check-ignore', 'C:\\Users\\allen\\Desktop\\Antigravity\\backend\\scripts'], cwd=C:\Users\allen\Desktop\Antigravity, stdin=None, shell=False, universal_newlines=False)
+2026-04-04 18:07:42,137 - git.cmd - DEBUG - Popen(['git', 'cat-file', '--batch-check'], cwd=C:\Users\allen\Desktop\Antigravity, stdin=<valid stream>, shell=False, universal_newlines=False)
+2026-04-04 18:07:42,575 - score - INFO - Starting model scoring process.
+2026-04-04 18:07:43,089 - housing.score - INFO - Scoring model...
+2026-04-04 18:07:43,160 - housing.score - INFO - Test RMSE: 47951.6477131037
+2026-04-04 18:07:43,162 - score - INFO - Metrics saved to artifacts\metrics.txt

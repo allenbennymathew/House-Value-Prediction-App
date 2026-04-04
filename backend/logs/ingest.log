@@ -31,3 +31,16 @@
 2026-04-03 12:16:57,003 - housing.ingest - INFO - Train and test splits created successfully.
 2026-04-03 12:16:57,272 - ingest_data - INFO - Train dataset saved to data/processed\train.csv
 2026-04-03 12:16:57,275 - ingest_data - INFO - Test dataset saved to data/processed\test.csv
+2026-04-04 18:05:37,383 - git.cmd - DEBUG - Popen(['git', 'version'], cwd=C:\Users\allen\Desktop\Antigravity\backend, stdin=None, shell=False, universal_newlines=False)
+2026-04-04 18:05:37,492 - git.cmd - DEBUG - Popen(['git', 'version'], cwd=C:\Users\allen\Desktop\Antigravity\backend, stdin=None, shell=False, universal_newlines=False)
+2026-04-04 18:05:37,605 - git.util - DEBUG - sys.platform='win32', git_executable='git'
+2026-04-04 18:05:37,609 - git.cmd - DEBUG - Popen(['git', 'check-ignore', 'C:\\Users\\allen\\Desktop\\Antigravity\\backend\\scripts'], cwd=C:\Users\allen\Desktop\Antigravity, stdin=None, shell=False, universal_newlines=False)
+2026-04-04 18:05:37,721 - git.cmd - DEBUG - Popen(['git', 'cat-file', '--batch-check'], cwd=C:\Users\allen\Desktop\Antigravity, stdin=<valid stream>, shell=False, universal_newlines=False)
+2026-04-04 18:05:38,180 - ingest_data - INFO - Starting data ingestion process.
+2026-04-04 18:05:38,181 - housing.ingest - INFO - Fetching housing data from https://raw.githubusercontent.com/ageron/handson-ml/master/datasets/housing/housing.tgz to data/raw
+2026-04-04 18:05:38,817 - housing.ingest - INFO - Data extraction complete.
+2026-04-04 18:05:38,817 - housing.ingest - INFO - Loading housing data from data/raw\housing.csv
+2026-04-04 18:05:38,890 - housing.ingest - INFO - Preparing train and test datasets based on income category.
+2026-04-04 18:05:38,935 - housing.ingest - INFO - Train and test splits created successfully.
+2026-04-04 18:05:39,225 - ingest_data - INFO - Train dataset saved to data/processed\train.csv
+2026-04-04 18:05:39,226 - ingest_data - INFO - Test dataset saved to data/processed\test.csv

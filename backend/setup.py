@@ -8,9 +8,9 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[
-        "numpy",
-        "pandas",
-        "scikit-learn",
-        "six"
+        "numpy==2.0.2",
+        "pandas==2.3.3",
+        "scikit-learn==1.6.1",
+        "six==1.17.0"
     ],
 )

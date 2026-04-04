@@ -1,5 +1,6 @@
 import os
 import sys
+import yaml
 import pickle
 import pandas as pd
 from fastapi import FastAPI, Depends, HTTPException
