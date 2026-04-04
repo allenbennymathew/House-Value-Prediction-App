@@ -8,3 +8,4 @@ numpy
 six
 python-multipart
 pydantic
+PyYAML
