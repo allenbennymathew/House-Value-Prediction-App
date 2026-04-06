@@ -456,19 +456,29 @@ export default function App() {
     setUser(null);
   };
 
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Router>
         <div className="app-container">
-          <Sidebar onLogout={handleLogout} />
+          {!isMobile && <Sidebar onLogout={handleLogout} />}
           <main className="main-content">
-            <Header title="House Prediction" user={user} />
+            <Header title="Sovereign" user={user} />
             <Routes>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/predict" element={<PredictPage user={user} />} />
               <Route path="/inferences" element={<InferencesPage />} />
               <Route path="*" element={<DashboardPage />} />
             </Routes>
+            {isMobile && (
+              <nav className="mobile-nav">
+                <Link to="/" className="mobile-nav-item">Dashboard</Link>
+                <Link to="/predict" className="mobile-nav-item">Predict</Link>
+                <Link to="/inferences" className="mobile-nav-item">History</Link>
+                <div onClick={handleLogout} className="mobile-nav-item">Exit</div>
+              </nav>
+            )}
           </main>
         </div>
       </Router>
