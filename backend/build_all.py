@@ -7,8 +7,10 @@ def run_cmd(cmd):
     subprocess.run(cmd, shell=True, check=True)
 
 try:
-    os.makedirs("logs", exist_ok=True)
-    os.makedirs("docs/source", exist_ok=True)
+    import shutil
+    if os.path.exists("artifacts"):
+        print("Clearing old artifacts...")
+        shutil.rmtree("artifacts")
     os.makedirs("artifacts", exist_ok=True)
     
     # 1. Install local package properly
