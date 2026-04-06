@@ -76,6 +76,15 @@ Modules
     print("Building Sphinx documentation...")
     run_cmd(f'"{sys.executable}" -m sphinx docs/source docs/build/html')
     
+    # 6. Verify Artifacts
+    print("Verifying generated artifacts...")
+    required_files = ["artifacts/linear_regression.pkl", "artifacts/decision_tree.pkl", "artifacts/random_forest.pkl"]
+    for f in required_files:
+        if not os.path.exists(f):
+            raise FileNotFoundError(f"CRITICAL ERROR: {f} was not generated during build!")
+        print(f"Verified: {f}")
+
     print("SUCCESS: All tasks successfully completed!")
 except Exception as e:
-    print(f"ERROR OCCURRED: {e}")
+    print(f"ERROR OCCURRED DURING BUILD: {e}")
+    sys.exit(1) # Ensure the Render build fails if training fails
