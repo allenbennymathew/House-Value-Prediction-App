@@ -7,6 +7,7 @@ def run_cmd(cmd):
     subprocess.run(cmd, shell=True, check=True)
 
 try:
+    os.environ["MLFLOW_TRACKING_URI"] = "file:./mlruns"
     import shutil
     if os.path.exists("artifacts"):
         print("Clearing old artifacts...")
