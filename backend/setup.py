@@ -8,8 +8,8 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[
-        "numpy==2.0.2",
-        "pandas==2.3.3",
+        "numpy==1.26.4",
+        "pandas==2.2.0",
         "scikit-learn==1.6.1",
         "six==1.17.0"
     ],
