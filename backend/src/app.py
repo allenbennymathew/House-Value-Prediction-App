@@ -21,6 +21,8 @@ class InferenceRecord(Base):
     model_name = Column(String, index=True)
     input_data = Column(String)
     prediction = Column(Float)
+    user_name = Column(String, nullable=True)
+    user_email = Column(String, nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
 engine = create_engine("sqlite:///./inferences.db", connect_args={"check_same_thread": False})
@@ -39,6 +41,15 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     Base.metadata.create_all(bind=engine)
+    # Ensure columns exist if the DB was already created without them
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        try:
+            conn.execute(text("ALTER TABLE inferences ADD COLUMN user_name TEXT"))
+        except: pass
+        try:
+            conn.execute(text("ALTER TABLE inferences ADD COLUMN user_email TEXT"))
+        except: pass
 
 def get_db():
     db = SessionLocal()
@@ -57,12 +68,16 @@ class InputData(BaseModel):
     households: float
     median_income: float
     ocean_proximity: str
+    user_name: str = None
+    user_email: str = None
 
 class RecordResponse(BaseModel):
     id: int
     model_name: str
     input_data: str
     prediction: float
+    user_name: str = None
+    user_email: str = None
     timestamp: datetime
     class Config:
         orm_mode = True
@@ -87,8 +102,10 @@ def get_prediction(data_dict, model_name="random_forest"):
 @app.post("/predict/{model_name}", response_model=RecordResponse)
 def predict(model_name: str, input_data: InputData, db: Session = Depends(get_db)):
     data_dict = input_data.dict()
+    # Filter out user info for the actual prediction input
+    feature_dict = {k: v for k, v in data_dict.items() if k not in ["user_name", "user_email"]}
     try:
-        prediction = float(get_prediction(data_dict, model_name))
+        prediction = float(get_prediction(feature_dict, model_name))
     except Exception as e:
         import sklearn
         err_msg = f"VALUATION FAILURE: {str(e)} (Engine: scikit-learn {sklearn.__version__})"
@@ -96,8 +113,10 @@ def predict(model_name: str, input_data: InputData, db: Session = Depends(get_db
         
     record = InferenceRecord(
         model_name=model_name,
-        input_data=str(data_dict),
-        prediction=prediction
+        input_data=str(feature_dict),
+        prediction=prediction,
+        user_name=data_dict.get("user_name"),
+        user_email=data_dict.get("user_email")
     )
     db.add(record)
     db.commit()

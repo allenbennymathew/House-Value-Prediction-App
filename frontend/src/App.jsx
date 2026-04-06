@@ -97,6 +97,17 @@ function DetailModal({ record, onClose }) {
           <div className="hero-value" style={{fontSize:'3rem'}}>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(record.prediction)}</div>
         </div>
         <div className="modal-divider" />
+        <div className="modal-section-label">Valuer Identity</div>
+        <div style={{padding:'0.5rem 1.5rem', display:'flex', alignItems:'center', gap:'0.75rem'}}>
+          <div style={{width:'32px', height:'32px', borderRadius:'50%', background:'var(--primary)', color:'black', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.8rem', fontWeight:800}}>
+            {record.user_name?.charAt(0) || '?'}
+          </div>
+          <div>
+            <div style={{fontSize:'0.8rem', fontWeight:700}}>{record.user_name || 'Anonymous Valuer'}</div>
+            <div style={{fontSize:'0.6rem', color:'var(--text-dim)'}}>{record.user_email || 'No email record'}</div>
+          </div>
+        </div>
+        <div className="modal-divider" />
         <div className="modal-section-label">Asset Core Parameters</div>
         {data && <div className="modal-grid" style={{padding:'1rem 1.5rem'}}>
           {Object.entries(data).map(([k, v]) => (
@@ -146,12 +157,16 @@ function DashboardPage() {
             <div className="section-title">Recent Network Activity</div>
             <div className="table-container" style={{marginTop:'1.5rem', border:'none'}}>
                <table>
-                  <thead><tr><th>Date</th><th>Model</th><th>Prediction</th></tr></thead>
+                  <thead><tr><th>Date</th><th>Model</th><th>Valuer</th><th>Prediction</th></tr></thead>
                   <tbody>
                     {history.map(rec => (
                       <tr key={rec.id} className="table-row" onClick={() => setSelected(rec)} style={{cursor:'pointer'}}>
                         <td style={{fontSize:'0.75rem'}}>{new Date(rec.timestamp + 'Z').toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true })}</td>
                         <td><span className="hero-tag" style={{fontSize:'0.6rem', padding:'0.1rem 0.4rem'}}>{rec.model_name.replace(/_/g, ' ')}</span></td>
+                        <td>
+                          <div style={{fontSize:'0.75rem', fontWeight:600}}>{rec.user_name || 'System'}</div>
+                          <div style={{fontSize:'0.6rem', color:'var(--text-dim)'}}>{rec.user_email?.split('@')[0] || ''}</div>
+                        </td>
                         <td style={{fontWeight:700, color:'var(--primary)'}}>${(rec.prediction/1000).toFixed(1)}k</td>
                       </tr>
                     ))}
@@ -180,7 +195,7 @@ function DashboardPage() {
 }
 
 /* ─── Pages ─── */
-function PredictPage() {
+function PredictPage({ user }) {
   const [form, setForm] = useState({
     longitude: -122.23, latitude: 37.88, housing_median_age: 41,
     total_rooms: 880, total_bedrooms: 129, population: 322,
@@ -198,8 +213,9 @@ function PredictPage() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setLoading(true); setResult(null);
     try {
+      const payload = { ...form, user_name: user?.name, user_email: user?.email };
       const res = await fetch(`${API_BASE}/predict/${model}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Error');
@@ -353,7 +369,7 @@ function InferencesPage() {
           </div>
           <div className="table-container">
             <table>
-              <thead><tr><th>Inference Date</th><th>Model Engine</th><th>Estimated Value</th><th>Actions</th></tr></thead>
+              <thead><tr><th>Inference Date</th><th>Model Engine</th><th>Valuer</th><th>Estimated Value</th><th>Actions</th></tr></thead>
               <tbody>
                 {filteredHistory.map(rec => (
                   <tr key={rec.id} className="table-row" onClick={() => setSelected(rec)} style={{cursor: 'pointer'}}>
@@ -362,6 +378,10 @@ function InferencesPage() {
                       <div style={{fontSize: '0.7rem', color: '#555'}}>{new Date(rec.timestamp + 'Z').toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
                     </td>
                     <td><span className="hero-tag" style={{fontSize: '0.6rem', padding: '0.1rem 0.4rem'}}>{rec.model_name.replace(/_/g, ' ')}</span></td>
+                    <td>
+                      <div style={{fontSize:'0.75rem', fontWeight:600}}>{rec.user_name || 'System'}</div>
+                      <div style={{fontSize:'0.6rem', color:'var(--text-dim)'}}>{rec.user_email || ''}</div>
+                    </td>
                     <td><span className="price-pill">{fmt(rec.prediction)}</span> <span className="change-badge">+2.4%</span></td>
                     <td><button style={{background: 'none', border: 'none', color: '#888', cursor: 'pointer', pointerEvents: 'none'}}>Details ›</button></td>
                   </tr>
@@ -445,7 +465,7 @@ export default function App() {
             <Header title="House Prediction" user={user} />
             <Routes>
               <Route path="/" element={<DashboardPage />} />
-              <Route path="/predict" element={<PredictPage />} />
+              <Route path="/predict" element={<PredictPage user={user} />} />
               <Route path="/inferences" element={<InferencesPage />} />
               <Route path="*" element={<DashboardPage />} />
             </Routes>
