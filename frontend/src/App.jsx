@@ -4,7 +4,7 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import './index.css';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://house-value-prediction-app.onrender.com';
 const GOOGLE_CLIENT_ID = '474600099307-84dof3mch66i1mrat962jct7dqmc7go0.apps.googleusercontent.com'; // Replace with yours
 
 const MODELS = [
