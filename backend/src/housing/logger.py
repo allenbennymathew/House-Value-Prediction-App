@@ -1,5 +1,6 @@
 import logging
 import sys
+import os
 
 def setup_logger(log_level="DEBUG", log_path=None, no_console_log=False):
     logger = logging.getLogger() # root logger
