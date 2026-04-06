@@ -10,3 +10,4 @@ python-multipart
 pydantic
 PyYAML==6.0.3
 requests
+mlflow
