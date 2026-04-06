@@ -50,7 +50,6 @@ function Sidebar({ onLogout }) {
       </nav>
       <div className="sidebar-footer">
         <Link to="/predict" className="new-btn" style={{textDecoration:'none'}}>+ New Prediction</Link>
-        <div className="nav-item">Support</div>
         <div className="nav-item" onClick={onLogout} style={{cursor:'pointer'}}>Sign Out</div>
       </div>
     </aside>
@@ -68,7 +67,6 @@ function Header({ title, user }) {
         <Link to="/inferences" className={`header-link ${pathname === '/inferences' ? 'active' : ''}`}>History</Link>
       </nav>
       <div className="header-actions">
-        <span>🔔</span>
         <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
           <div style={{textAlign:'right'}}>
             <div style={{fontSize:'0.75rem', fontWeight:800}}>{user?.name}</div>
