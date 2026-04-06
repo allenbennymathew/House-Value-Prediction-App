@@ -8,6 +8,9 @@ def run_cmd(cmd):
 
 try:
     os.environ["MLFLOW_TRACKING_URI"] = "file:./mlruns"
+    os.makedirs("logs", exist_ok=True)
+    os.makedirs("docs/source", exist_ok=True)
+    os.makedirs("mlruns", exist_ok=True)
     import shutil
     if os.path.exists("artifacts"):
         print("Clearing old artifacts...")

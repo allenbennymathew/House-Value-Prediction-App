@@ -18,6 +18,9 @@ def setup_logger(log_level="DEBUG", log_path=None, no_console_log=False):
         logger.addHandler(console_handler)
         
     if log_path:
+        log_dir = os.path.dirname(log_path)
+        if log_dir:
+            os.makedirs(log_dir, exist_ok=True)
         file_handler = logging.FileHandler(log_path)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
