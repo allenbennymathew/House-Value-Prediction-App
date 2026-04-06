@@ -29,55 +29,14 @@ try:
     print("Running Model Training...")
     run_cmd(f'"{sys.executable}" scripts/train.py --log-path logs/train.log')
     
-    # 4. Run Scoring
-    print("Running Model Scoring...")
-    run_cmd(f'"{sys.executable}" scripts/score.py --log-path logs/score.log')
+    # 4. Run Scoring for ALL models
+    print("Running Model Scoring for all engines...")
+    # First model overwrites, others append
+    run_cmd(f'"{sys.executable}" scripts/score.py --model_path artifacts/linear_regression.pkl --log-path logs/score.log')
+    run_cmd(f'"{sys.executable}" scripts/score.py --model_path artifacts/decision_tree.pkl --append --log-path logs/score.log')
+    run_cmd(f'"{sys.executable}" scripts/score.py --model_path artifacts/random_forest.pkl --append --log-path logs/score.log')
     
-    # 5. Build sphinx config
-    conf_py = """
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../../src'))
-
-project = 'Housing Prediction'
-copyright = '2026'
-author = 'Allen'
-release = '0.1'
-
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon']
-templates_path = ['_templates']
-exclude_patterns = []
-
-html_theme = 'alabaster'
-"""
-    index_rst = """
-Housing Prediction Documentation
-================================
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   modules
-"""
-    modules_rst = """
-Modules
-=======
-
-.. automodule:: housing.ingest
-   :members:
-   
-.. automodule:: housing.train
-   :members:
-   
-.. automodule:: housing.score
-   :members:
-"""
-    with open("docs/source/conf.py", "w") as f: f.write(conf_py)
-    with open("docs/source/index.rst", "w") as f: f.write(index_rst)
-    with open("docs/source/modules.rst", "w") as f: f.write(modules_rst)
-    
-    # Skip sphinx build if sphinx is not installed in the simple production environment
+    # 5. Build sphinx config (optional)
     try:
         import sphinx
         print("Building Sphinx documentation...")
@@ -87,7 +46,7 @@ Modules
     
     # 6. Verify Artifacts
     print("Verifying generated artifacts...")
-    required_files = ["artifacts/linear_regression.pkl", "artifacts/decision_tree.pkl", "artifacts/random_forest.pkl"]
+    required_files = ["artifacts/linear_regression.pkl", "artifacts/decision_tree.pkl", "artifacts/random_forest.pkl", "artifacts/metrics.txt"]
     for f in required_files:
         if not os.path.exists(f):
             raise FileNotFoundError(f"CRITICAL ERROR: {f} was not generated during build!")

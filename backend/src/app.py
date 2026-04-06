@@ -127,7 +127,7 @@ def get_metrics():
     """Return per-model evaluation metrics from artifacts/metrics.txt"""
     metrics_path = "artifacts/metrics.txt"
     if not os.path.exists(metrics_path):
-        raise HTTPException(status_code=404, detail="Metrics file not found. Run evaluate_models.py first.")
+        raise HTTPException(status_code=404, detail="Metrics file not found. Ensure the build/scoring process completed successfully.")
     result = {}
     with open(metrics_path) as f:
         for line in f:
