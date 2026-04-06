@@ -24,7 +24,7 @@ def main():
     logger.info("Starting model scoring process.")
     
     test_path = os.path.join(args.dataset, "test.csv")
-    model_path = os.path.join(args.model_folder, "model.pkl")
+    model_path = os.path.join(args.model_folder, "random_forest.pkl")
     
     if not all([os.path.exists(test_path), os.path.exists(model_path)]):
         logger.error("Required files not found.")
